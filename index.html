@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Evangelion Mafia - NERV Tactical Operations System</title>
+    <link rel="stylesheet" href="css/main.css">
+    <link rel="stylesheet" href="css/eva-theme.css">
+    <link rel="stylesheet" href="assets/fonts/google-fonts.css">
+    <meta name="description" content="An Evangelion-themed Mafia card game with NERV HUD interface">
+</head>
+<body>
+    <!-- Main Container -->
+    <div class="eva-container">
+        <!-- Status Indicators -->
+        <div class="status-indicators">
+            <div class="status-left">
+                <div class="status-item">MAGI SYSTEM: <span class="status-active">ONLINE</span></div>
+                <div class="status-item">TERMINAL DOGMA: <span class="status-secure">SECURE</span></div>
+            </div>
+            <div class="status-right">
+                <div class="status-item">SYNCHRONIZATION: <span class="status-value">100%</span></div>
+                <div class="status-item">LCL PRESSURE: <span class="status-nominal">NOMINAL</span></div>
+            </div>
+        </div>
+
+        <!-- Hexagonal Patterns (Decorative) -->
+        <div class="hex-pattern top-left"></div>
+        <div class="hex-pattern top-right"></div>
+        <div class="hex-pattern bottom-left"></div>
+        <div class="hex-pattern bottom-right"></div>
+
+        <!-- Main Content Area -->
+        <section class="main-content">
+            <!-- Login Panel -->
+            <div class="eva-panel login-panel" id="login-panel">
+                <div class="panel-header">
+                    <div class="panel-title">NERV TACTICAL OPERATIONS SYSTEM</div>
+                    <div class="panel-subtitle">AUTHENTICATION REQUIRED</div>
+                </div>
+                <div class="panel-content">
+                    <div class="login-form">
+                        <div class="form-group">
+                            <label for="username">AGENT ID</label>
+                            <input type="text" id="username" class="eva-input" placeholder="Enter your agent ID">
+                        </div>
+                        <div class="form-group">
+                            <label for="room-code">OPERATION CODE</label>
+                            <input type="text" id="room-code" class="eva-input" placeholder="Enter operation code">
+                        </div>
+                        <div class="form-actions">
+                            <button id="create-room-btn" class="eva-button primary">CREATE OPERATION</button>
+                            <button id="join-room-btn" class="eva-button secondary">JOIN OPERATION</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Game Setup Panel -->
+            <div class="eva-panel setup-panel hidden" id="setup-panel">
+                <div class="panel-header">
+                    <div class="panel-title">OPERATION CONFIGURATION</div>
+                    <div class="panel-subtitle">ROOM CODE: <span id="room-code-display">XXXXX</span></div>
+                </div>
+                <div class="panel-content">
+                    <div class="player-list" id="setup-player-list">
+                        <!-- Players will be populated by JavaScript -->
+                    </div>
+                    <div class="setup-controls">
+                        <div class="form-group">
+                            <label for="mafia-count">MAFIA AGENTS</label>
+                            <select id="mafia-count" class="eva-select">
+                                <option value="1">1</option>
+                                <option value="2">2</option>
+                                <option value="3">3</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="detective-count">DETECTIVE AGENTS</label>
+                            <select id="detective-count" class="eva-select">
+                                <option value="1">1</option>
+                                <option value="2">2</option>
+                            </select>
+                        </div>
+                        <button id="start-game-btn" class="eva-button primary">INITIATE OPERATION</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Game Board Panel -->
+            <div class="eva-panel game-panel hidden" id="game-panel">
+                <div class="panel-header">
+                    <div class="panel-title">TACTICAL OPERATIONS</div>
+                    <div class="panel-subtitle">
+                        <span id="phase-display">DAY PHASE</span> - 
+                        <span id="timer-display">02:00</span>
+                    </div>
+                </div>
+                <div class="panel-content">
+                    <div class="game-status">
+                        <div class="status-box">
+                            <div class="status-label">PHASE</div>
+                            <div class="status-value" id="current-phase">DAY DISCUSSION</div>
+                        </div>
+                        <div class="status-box">
+                            <div class="status-label">YOUR ROLE</div>
+                            <div class="status-value" id="player-role">CIVILIAN</div>
+                        </div>
+                    </div>
+                    
+                    <div class="player-grid" id="player-grid">
+                        <!-- Players will be populated by JavaScript -->
+                    </div>
+                    
+                    <div class="action-panel">
+                        <div class="action-title">AVAILABLE ACTIONS</div>
+                        <div class="action-buttons" id="action-buttons">
+                            <!-- Actions will be populated by JavaScript based on role and phase -->
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Role Card Panel -->
+            <div class="eva-panel role-panel hidden" id="role-panel">
+                <div class="panel-header">
+                    <div class="panel-title">AGENT CLASSIFICATION</div>
+                </div>
+                <div class="panel-content">
+                    <div class="role-card">
+                        <div class="role-title" id="role-title">CIVILIAN</div>
+                        <div class="role-image">
+                            <img id="role-image" src="assets/cards/civilian.svg" alt="Role Card">
+                        </div>
+                        <div class="role-description" id="role-description">
+                            You are a civilian. Your objective is to identify and eliminate all MAFIA agents.
+                        </div>
+                    </div>
+                    <button id="acknowledge-role-btn" class="eva-button primary">ACKNOWLEDGE</button>
+                </div>
+            </div>
+
+            <!-- Chat Panel -->
+            <div class="eva-panel chat-panel" id="chat-panel">
+                <div class="panel-header">
+                    <div class="panel-title">COMMUNICATIONS</div>
+                    <div class="panel-controls">
+                        <button class="panel-toggle" id="toggle-chat">
+                            <span class="toggle-icon">▼</span>
+                        </button>
+                    </div>
+                </div>
+                <div class="panel-content">
+                    <div class="chat-messages" id="chat-messages">
+                        <!-- Messages will be populated by JavaScript -->
+                    </div>
+                    <div class="chat-input-container">
+                        <input type="text" class="eva-input chat-input" id="chat-input" placeholder="Enter message...">
+                        <button class="eva-button send-btn" id="send-message-btn">SEND</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Game Notifications -->
+            <div class="game-notification" id="game-notification">
+                <div class="notification-content">
+                    <div class="notification-title">ALERT</div>
+                    <div class="notification-message">Night phase has begun. All agents close your eyes.</div>
+                </div>
+            </div>
+        </section>
+    </div>
+
+    <!-- Scripts -->
+    <script src="js/firebase.js" type="module"></script>
+    <script src="js/auth.js" type="module"></script>
+    <script src="js/ui.js" type="module"></script>
+    <script src="js/game.js" type="module"></script>
+    <script src="js/app.js" type="module"></script>
+</body>
+</html>
